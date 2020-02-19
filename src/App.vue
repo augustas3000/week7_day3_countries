@@ -1,28 +1,53 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<template lang="html">
+  <div class="">
+      <h1>World Countries</h1>
+      <div class="main-container">
+          <!-- imported component: countries-list -->
+          <countries-list v-bind:countries="countries" ></countries-list>
+          <country-detail v-bind:country="selectedCountry"></country-detail>
+          
+      </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CountriesList from './components/CountriesList.vue'
+import { eventBus } from './main.js'
+import CountryDetail from './components/CountryDetail.vue'
+
+
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  name: 'app',
+  data(){
+    return {
+      countries: [],
+      // for transmitting back selected country item through eventBus:
+      selectedCountry: null
+    };
+
+  },
+    // loads up, mounted is auto called and countries fetched
+    mounted(){
+      fetch('https://restcountries.eu/rest/v2/all').then(res => res.json()).then(countries => this.countries = countries)
+
+  // event bus listener - to listen on this channel country-selected, as soon as there is emission, get the data(country):
+      eventBus.$on('country-selected', (country) => {
+        this.selectedCountry = country;
+      })
+    },
+
+    components: {
+      "countries-list": CountriesList,
+      "country-detail": CountryDetail
+    }
+
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="css">
+    .main-container {
+      display: flex;
+      justify-content: space-between;
+    }
 </style>
