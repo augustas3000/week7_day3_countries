@@ -1,11 +1,27 @@
 <template lang="html">
   <div class="">
-      <h1>World Countries</h1>
+
+    <h1>Search Bar</h1>
+
+    <country-select v-bind:countries="countries"></country-select>
+
+
+    <hr>
+    <h1>World Countries(Dropdown)</h1>
+      <div class="main-container">
+        <countries-dropdown v-bind:countries="countries"></countries-dropdown>
+        <country-detail v-bind:country="selectedCountry"></country-detail>
+      </div>
+
+    <hr>
+      <h1>World Countries(List)</h1>
       <div class="main-container">
           <!-- imported component: countries-list -->
+
           <countries-list v-bind:countries="countries" ></countries-list>
+
           <country-detail v-bind:country="selectedCountry"></country-detail>
-          
+
       </div>
   </div>
 </template>
@@ -14,7 +30,8 @@
 import CountriesList from './components/CountriesList.vue'
 import { eventBus } from './main.js'
 import CountryDetail from './components/CountryDetail.vue'
-
+import CountriesDropdown from './components/CountriesDropdown.vue'
+import CountrySelect from './components/CountrySelect.vue'
 
 
 export default {
@@ -35,11 +52,19 @@ export default {
       eventBus.$on('country-selected', (country) => {
         this.selectedCountry = country;
       })
+
+      eventBus.$on('country-selected-dd', (country) => {
+        this.selectedCountry = country;
+      })
+
+
     },
 
     components: {
       "countries-list": CountriesList,
-      "country-detail": CountryDetail
+      "country-detail": CountryDetail,
+      "countries-dropdown": CountriesDropdown,
+      "country-select": CountrySelect
     }
 
 }
